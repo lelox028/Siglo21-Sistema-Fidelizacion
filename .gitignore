@@ -23,3 +23,5 @@
 hs_err_pid*
 replay_pid*
 app/sistemafidelizacion/.env
+app/sistemafidelizacion/src/main/resources/.env
+/app/sistemafidelizacion/target
