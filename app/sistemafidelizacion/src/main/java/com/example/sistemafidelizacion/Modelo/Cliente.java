@@ -13,7 +13,7 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(int dni, String nombreCompleto, String email, String telefono, Date fechaNacimiento) {
+    public Cliente(int dni, String nombreCompleto, String email, String telefono, LocalDate fechaNacimiento) {
         this.dni = dni;
         this.nombreCompleto = nombreCompleto;
         this.email = email;
