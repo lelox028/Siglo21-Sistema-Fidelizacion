@@ -31,3 +31,25 @@ Siguiendo las decisiones del Prototipo Operacional (MVP), el sistema se desplieg
 │   │       └── vista/
 │   └── pom.xml         # Dependencias (incluye mysql-connector-j)
 └── README.md
+```
+
+## Configuración de la conexión a la base de datos
+
+Antes de ejecutar la aplicación, es necesario configurar las credenciales de MySQL en un archivo `.env`. ubicado en `app/sistemafidelizacion/src/main/resources`, al mismo nivel que `pom.xml`:
+
+```text
+app/sistemafidelizacion/src/main/resources
+└── .env
+```
+
+El archivo debe contener estas variables:
+
+```dotenv
+DB_HOST=jdbc:mysql://localhost:3306/SistemaFidelizacion
+DB_USER=su_usuario
+DB_PASS=su_contraseña
+```
+
+`DB_HOST` debe ser la URL JDBC completa.
+`tu_usuario` y `tu_contraseña` debe ser reemplazado por las credenciales de MySQL. 
+La base de datos debe existir; puedes crearla y preparar sus tablas ejecutando `db/script-creacion.sql` desde la raíz del repositorio.
