@@ -1,12 +1,13 @@
 package com.example.sistemafidelizacion.Modelo;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 public class Cliente {
     private int dni;
     private String nombreCompleto;
     private String email;
     private String telefono;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     // constructor
     public Cliente() {
@@ -20,7 +21,7 @@ public class Cliente {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    //getters y setters
+    // getters y setters
     public int getDni() {
         return dni;
     }
@@ -53,11 +54,11 @@ public class Cliente {
         this.telefono = telefono;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -72,6 +73,7 @@ public class Cliente {
                 ", fechaNacimiento=" + fechaNacimiento +
                 '}';
     }
+
     // metodos especificos
     public boolean utilizoBeneficioCumpleanos() {
         // logica para determinar si el cliente utilizo el beneficio de cumpleaños
