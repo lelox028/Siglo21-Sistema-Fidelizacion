@@ -1,26 +1,28 @@
 package com.example.sistemafidelizacion.Modelo;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Compra {
     //estructura
     private int idCompra;
-    private Date fechaHora;
+    private LocalDateTime fechaHora;
     private double monto;
     private Cliente cliente;
-    private List<Beneficio> beneficiosAplicados;
+    private List<BeneficioAplicado> beneficiosAplicados;
 
 
     // constructor
     public Compra() {
     }
 
-    public Compra(int idCompra, Date fechaHora, double monto, Cliente cliente, List<Beneficio> beneficiosAplicados) {
+    public Compra(int idCompra, LocalDateTime fechaHora, double monto, Cliente cliente,
+            List<BeneficioAplicado> beneficiosAplicados) {
         this.idCompra = idCompra;
         this.fechaHora = fechaHora;
         this.monto = monto;
         this.cliente = cliente;
-        this.beneficiosAplicados = beneficiosAplicados;
+        this.beneficiosAplicados = beneficiosAplicados == null ? new ArrayList<>() : beneficiosAplicados;
     }
 
     //getters y setters
@@ -32,11 +34,11 @@ public class Compra {
         this.idCompra = idCompra;
     }
 
-    public Date getFechaHora() {
+    public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(Date fechaHora) {
+    public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 
@@ -56,11 +58,11 @@ public class Compra {
         this.cliente = cliente;
     }
 
-    public List<Beneficio> getBeneficiosAplicados() {
+    public List<BeneficioAplicado> getBeneficiosAplicados() {
         return beneficiosAplicados;
     }
 
-    public void setBeneficiosAplicados(List<Beneficio> beneficiosAplicados) {
+    public void setBeneficiosAplicados(List<BeneficioAplicado> beneficiosAplicados) {
         this.beneficiosAplicados = beneficiosAplicados;
     }
 
@@ -79,7 +81,10 @@ public class Compra {
 
     // metodos especificos
 
-    public void agregarBeneficio(Beneficio beneficio) {
-        beneficiosAplicados.add(beneficio);
+    public void agregarBeneficio(BeneficioAplicado beneficioAplicado) {
+        if (beneficioAplicado == null) {
+            throw new IllegalArgumentException("El beneficio aplicado no puede ser nulo.");
+        }
+        beneficiosAplicados.add(beneficioAplicado);
     }
 }

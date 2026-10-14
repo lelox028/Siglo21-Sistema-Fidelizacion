@@ -1,19 +1,20 @@
 package com.example.sistemafidelizacion.Modelo;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class BeneficioAplicado {
     // estructura
     private int idBeneficioAplicado;
     private Beneficio beneficio;
     private Compra compra;
-    private Date fechaAplicacion;
+    private LocalDateTime fechaAplicacion;
 
     // constructor
     public BeneficioAplicado() {
     }
 
-    public BeneficioAplicado(int idBeneficioAplicado, Beneficio beneficio, Compra compra, Date fechaAplicacion) {
+    public BeneficioAplicado(int idBeneficioAplicado, Beneficio beneficio, Compra compra,
+            LocalDateTime fechaAplicacion) {
         this.idBeneficioAplicado = idBeneficioAplicado;
         this.beneficio = beneficio;
         this.compra = compra;
@@ -46,11 +47,11 @@ public class BeneficioAplicado {
         this.compra = compra;
     }
 
-    public Date getFechaAplicacion() {
+    public LocalDateTime getFechaAplicacion() {
         return fechaAplicacion;
     }
 
-    public void setFechaAplicacion(Date fechaAplicacion) {
+    public void setFechaAplicacion(LocalDateTime fechaAplicacion) {
         this.fechaAplicacion = fechaAplicacion;
     }
 
