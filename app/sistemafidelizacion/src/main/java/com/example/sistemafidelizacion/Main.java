@@ -1,7 +1,10 @@
 package com.example.sistemafidelizacion;
 
 import java.sql.Connection;
+import javax.swing.SwingUtilities;
+// import javax.swing.UIManager;
 
+import com.example.sistemafidelizacion.Vista.PantallaPrincipal;
 
 import com.example.sistemafidelizacion.DAO.ConexionDB;
 
@@ -35,9 +38,9 @@ public class Main {
         // }));
 
         // 4. Iniciar la interfaz gráfica en el Event Dispatch Thread (EDT) de Swing
-        // SwingUtilities.invokeLater(() -> {
-        //     PantallaPrincipal pantalla = new PantallaPrincipal();
-        //     pantalla.setVisible(true); // Abre el Menú Principal del sistema
-        // });
+        SwingUtilities.invokeLater(() -> {
+            PantallaPrincipal pantalla = new PantallaPrincipal();
+            pantalla.setVisible(true); // Abre el Menú Principal del sistema
+        });
     }
 }
