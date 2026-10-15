@@ -1,6 +1,9 @@
 package com.example.sistemafidelizacion.Vista;
 
 import javax.swing.*;
+
+import com.example.sistemafidelizacion.Vista.Cliente.FormularioCliente;
+
 import java.awt.*;
 
 public class PantallaPrincipal extends JFrame {
