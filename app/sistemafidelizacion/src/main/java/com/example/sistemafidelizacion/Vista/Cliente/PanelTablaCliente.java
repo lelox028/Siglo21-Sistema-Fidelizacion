@@ -36,21 +36,16 @@ public class PanelTablaCliente extends JPanel {
         // centrar el contenido del panel de barra de busqueda dejando espacio a los
         // lados
         panelBarraBusqueda.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
-        JLabel lblBuscar = new JLabel("Buscar por DNI:");
-        txtBuscar = new JTextField("Ingrese DNI...");
+        JLabel lblBuscar = new JLabel("Buscar:");
+        txtBuscar = new JTextField();
         txtBuscar.setPreferredSize(new Dimension(0, 30));
 
         txtBuscar.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                if (txtBuscar.getText().equals("Ingrese DNI...")) {
-                    txtBuscar.setText("");
-                }
+                txtBuscar.selectAll();
             }
 
             public void focusLost(java.awt.event.FocusEvent evt) {
-                if (txtBuscar.getText().isEmpty()) {
-                    txtBuscar.setText("Ingrese DNI...");
-                }
             }
         });
 
@@ -93,6 +88,9 @@ public class PanelTablaCliente extends JPanel {
         };
 
         tablaClientes = new JTable(modeloTablaClientes);
+        tablaClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        sorter = new TableRowSorter<>(modeloTablaClientes);
+        tablaClientes.setRowSorter(sorter);
 
         panelTablaClientes.add(new JScrollPane(tablaClientes), BorderLayout.CENTER);
 
@@ -104,7 +102,7 @@ public class PanelTablaCliente extends JPanel {
         if (texto.isEmpty()) {
             sorter.setRowFilter(null);
         } else {
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + texto));
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + java.util.regex.Pattern.quote(texto)));
         }
     }
 
@@ -130,5 +128,9 @@ public class PanelTablaCliente extends JPanel {
             return (int) modeloTablaClientes.getValueAt(filaModelo, 0);
         }
         return -1;
+    }
+
+    public JTable getTable() {
+        return tablaClientes;
     }
 }
