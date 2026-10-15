@@ -7,6 +7,7 @@ import java.awt.*;
 
 public class PanelFormularioCliente extends JPanel {
 
+    private final FormularioCliente formularioCliente;
     private final JTextField txtDni = new JTextField();
     private final JTextField txtNombre = new JTextField();
     private final JTextField txtEmail = new JTextField();
@@ -14,7 +15,9 @@ public class PanelFormularioCliente extends JPanel {
     private final JTextField txtFechaNacimiento = new JTextField();
     private final JLabel lblEstado = new JLabel(" ");
 
-    public PanelFormularioCliente(Runnable accionGuardar, Runnable accionVerDetalles) {
+    public PanelFormularioCliente(FormularioCliente formularioCliente) {
+        this.formularioCliente = formularioCliente;
+
         setLayout(new GridBagLayout());
         setBorder(BorderFactory.createTitledBorder("Detalles del Cliente"));
 
@@ -30,9 +33,9 @@ public class PanelFormularioCliente extends JPanel {
         agregarCampo(gbc, 4, "Fecha de Nacimiento (AAAA-MM-DD)", txtFechaNacimiento);
 
         JButton btnGuardar = new JButton("Guardar Cliente");
-        btnGuardar.addActionListener(e -> accionGuardar.run());
+        btnGuardar.addActionListener(e -> formularioCliente.guardarCliente());
         JButton btnDetalles = new JButton("Ver Detalles");
-        btnDetalles.addActionListener(e -> accionVerDetalles.run());
+        btnDetalles.addActionListener(e -> formularioCliente.verDetalles());
 
         JPanel acciones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         acciones.add(btnGuardar);
