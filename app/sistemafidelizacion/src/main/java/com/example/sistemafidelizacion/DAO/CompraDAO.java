@@ -1,6 +1,8 @@
 package com.example.sistemafidelizacion.DAO;
 
 import com.example.sistemafidelizacion.Modelo.Cliente;
+import com.example.sistemafidelizacion.Modelo.Beneficio;
+import com.example.sistemafidelizacion.Modelo.BeneficioAplicado;
 import com.example.sistemafidelizacion.Modelo.Compra;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +11,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CompraDAO {
     public boolean insertar(Compra compra) throws ErrorAccesoDatosException {
@@ -35,19 +39,23 @@ public class CompraDAO {
 
     public List<Compra> obtenerHistorialCliente(int dni) throws ErrorAccesoDatosException {
         String sql = "SELECT co.id_compra, co.fecha_hora, co.monto, "
-                + "c.dni, c.nombre_completo, c.telefono, c.email, c.fecha_cumpleanos "
+                + "c.dni, c.nombre_completo, c.telefono, c.email, c.fecha_cumpleanos, "
+                + "ba.id_beneficio_aplicado, ba.fecha_aplicacion, "
+                + "b.id_beneficio, b.nombre AS beneficio_nombre, b.descripcion, b.activo "
                 + "FROM Compra co INNER JOIN Cliente c ON c.dni = co.dni_cliente "
+                + "LEFT JOIN BeneficioAplicado ba ON ba.id_compra = co.id_compra "
+                + "LEFT JOIN Beneficio b ON b.id_beneficio = ba.id_beneficio "
                 + "WHERE co.dni_cliente = ? ORDER BY co.fecha_hora";
-        List<Compra> compras = new ArrayList<>();
+        Map<Integer, Compra> compras = new LinkedHashMap<>();
         try (Connection conn = obtenerConexion();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, dni);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    compras.add(mapearCompra(rs));
+                    mapearCompraConBeneficio(rs, compras);
                 }
             }
-            return compras;
+            return new ArrayList<>(compras.values());
         } catch (SQLException e) {
             throw new ErrorAccesoDatosException("No se pudo obtener el historial del cliente.", e);
         }
@@ -55,34 +63,56 @@ public class CompraDAO {
 
     public List<Compra> obtenerEntre(LocalDateTime desde, LocalDateTime hasta) throws ErrorAccesoDatosException {
         String sql = "SELECT co.id_compra, co.fecha_hora, co.monto, "
-                + "c.dni, c.nombre_completo, c.telefono, c.email, c.fecha_cumpleanos "
+                + "c.dni, c.nombre_completo, c.telefono, c.email, c.fecha_cumpleanos, "
+                + "ba.id_beneficio_aplicado, ba.fecha_aplicacion, "
+                + "b.id_beneficio, b.nombre AS beneficio_nombre, b.descripcion, b.activo "
                 + "FROM Compra co INNER JOIN Cliente c ON c.dni = co.dni_cliente "
+                + "LEFT JOIN BeneficioAplicado ba ON ba.id_compra = co.id_compra "
+                + "LEFT JOIN Beneficio b ON b.id_beneficio = ba.id_beneficio "
                 + "WHERE co.fecha_hora BETWEEN ? AND ? ORDER BY co.fecha_hora";
-        List<Compra> compras = new ArrayList<>();
+        Map<Integer, Compra> compras = new LinkedHashMap<>();
         try (Connection conn = obtenerConexion();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, desde);
             stmt.setObject(2, hasta);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    compras.add(mapearCompra(rs));
+                    mapearCompraConBeneficio(rs, compras);
                 }
             }
-            return compras;
+            return new ArrayList<>(compras.values());
         } catch (SQLException e) {
             throw new ErrorAccesoDatosException("No se pudo obtener el historial del período.", e);
         }
     }
 
-    private Compra mapearCompra(ResultSet rs) throws SQLException {
+    private void mapearCompraConBeneficio(ResultSet rs, Map<Integer, Compra> compras) throws SQLException {
         Cliente cliente = new Cliente(
                 rs.getInt("dni"),
                 rs.getString("nombre_completo"),
                 rs.getString("telefono"),
                 rs.getString("email"),
                 rs.getObject("fecha_cumpleanos", java.time.LocalDate.class));
-        LocalDateTime fechaHora = rs.getObject("fecha_hora", LocalDateTime.class);
-        return new Compra(rs.getInt("id_compra"), fechaHora, rs.getDouble("monto"), cliente, null);
+        int idCompra = rs.getInt("id_compra");
+        Compra compra = compras.get(idCompra);
+        if (compra == null) {
+            LocalDateTime fechaHora = rs.getObject("fecha_hora", LocalDateTime.class);
+            compra = new Compra(idCompra, fechaHora, rs.getDouble("monto"), cliente, null);
+            compras.put(idCompra, compra);
+        }
+
+        if (rs.getObject("id_beneficio_aplicado") != null) {
+            Beneficio beneficio = new Beneficio(
+                    rs.getInt("id_beneficio"),
+                    rs.getString("beneficio_nombre"),
+                    rs.getString("descripcion"),
+                    rs.getBoolean("activo"));
+            compra.agregarBeneficio(new BeneficioAplicado(
+                    rs.getInt("id_beneficio_aplicado"),
+                    beneficio,
+                    compra,
+                    rs.getObject("fecha_aplicacion", LocalDateTime.class)));
+        }
     }
 
     private Connection obtenerConexion() throws ErrorAccesoDatosException {
