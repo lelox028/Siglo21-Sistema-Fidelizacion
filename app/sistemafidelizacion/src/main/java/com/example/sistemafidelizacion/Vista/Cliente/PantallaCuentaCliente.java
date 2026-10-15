@@ -9,7 +9,10 @@ import com.example.sistemafidelizacion.Vista.PantallaPrincipal;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PantallaCuentaCliente extends JPanel {
@@ -25,7 +28,13 @@ public class PantallaCuentaCliente extends JPanel {
             new Object[] {"Compra", "Fecha y hora", "Monto", "Datos"}, 0) {
         @Override public boolean isCellEditable(int row, int column) { return false; }
     };
-    private final JLabel lblDetalle = new JLabel("Seleccione una compra para ver sus detalles.");
+    private final JTable tablaCompras = new JTable(modeloHistorial);
+    private final JSpinner selectorFecha = new JSpinner(new SpinnerDateModel());
+    private final JPanel panelBeneficios = new JPanel();
+    private final JTextField txtMontoCompra = crearCampoSoloLectura();
+    private final JTextField txtFechaCompra = crearCampoSoloLectura();
+    private List<Compra> comprasCliente = new ArrayList<>();
+    private Compra compraSeleccionada;
 
     public PantallaCuentaCliente(PantallaPrincipal pantallaPrincipal) {
         setLayout(new BorderLayout(10, 10));
@@ -39,20 +48,18 @@ public class PantallaCuentaCliente extends JPanel {
         contenedorFicha.setBorder(BorderFactory.createEmptyBorder(50, 12, 50, 12));
         contenedorFicha.add(panelFicha, BorderLayout.CENTER);
 
-        JTable tabla = new JTable(modeloHistorial);
-        tabla.removeColumn(tabla.getColumnModel().getColumn(3));
-        tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabla.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && tabla.getSelectedRow() >= 0) {
-                Compra compra = (Compra) modeloHistorial.getValueAt(tabla.convertRowIndexToModel(tabla.getSelectedRow()), 3);
-                mostrarDetalle(compra);
-            }
-        });
-        JPanel historial = new JPanel(new BorderLayout(6, 6));
-        historial.setBorder(BorderFactory.createTitledBorder("Historial de compras"));
-        historial.add(new JScrollPane(tabla), BorderLayout.CENTER);
-        historial.add(lblDetalle, BorderLayout.SOUTH);
-        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, contenedorFicha, historial);
+        tablaCompras.removeColumn(tablaCompras.getColumnModel().getColumn(3));
+        tablaCompras.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tablaCompras.getSelectionModel().addListSelectionListener(e -> seleccionarCompra());
+        JPanel panelHistorial = crearPanelHistorial();
+        JPanel panelDetalleCompra = crearPanelDetalleCompra();
+        JSplitPane splitHistorial = new JSplitPane(
+                JSplitPane.HORIZONTAL_SPLIT, panelHistorial, panelDetalleCompra);
+        splitHistorial.setResizeWeight(0.55);
+        JPanel panelDerecho = new JPanel(new BorderLayout());
+        panelDerecho.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        panelDerecho.add(splitHistorial, BorderLayout.CENTER);
+        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, contenedorFicha, panelDerecho);
         split.setResizeWeight(0.32);
         add(split, BorderLayout.CENTER);
 
@@ -67,7 +74,9 @@ public class PantallaCuentaCliente extends JPanel {
             if (cliente == null) {
                 lblCliente.setText("Cliente no encontrado");
                 limpiarFicha();
+                comprasCliente = new ArrayList<>();
                 modeloHistorial.setRowCount(0);
+                limpiarDetalleCompra();
                 return;
             }
             lblCliente.setText("Cliente: " + cliente.getNombreCompleto());
@@ -76,16 +85,97 @@ public class PantallaCuentaCliente extends JPanel {
             txtEmail.setText(cliente.getEmail());
             txtTelefono.setText(cliente.getTelefono());
             txtFechaNacimiento.setText(String.valueOf(cliente.getFechaNacimiento()));
-            modeloHistorial.setRowCount(0);
-            List<Compra> compras = compraDAO.obtenerHistorialCliente(dni);
-            for (Compra compra : compras) {
-                modeloHistorial.addRow(new Object[] { compra.getIdCompra(),
-                        compra.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
-                        String.format("$ %.2f", compra.getMonto()), compra });
-            }
+            comprasCliente = compraDAO.obtenerHistorialCliente(dni);
+            mostrarCompras(comprasCliente);
+            limpiarDetalleCompra();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private JPanel crearPanelHistorial() {
+            JPanel panel = new JPanel(new BorderLayout(6, 6));
+            panel.setBorder(BorderFactory.createTitledBorder("Compras del cliente"));
+
+            JPanel buscador = new JPanel(new BorderLayout(6, 6));
+            buscador.add(new JLabel("Buscar por fecha:"), BorderLayout.WEST);
+            selectorFecha.setEditor(new JSpinner.DateEditor(selectorFecha, "dd/MM/yyyy"));
+            buscador.add(selectorFecha, BorderLayout.CENTER);
+            JButton btnFiltrar = new JButton("Filtrar");
+            btnFiltrar.addActionListener(e -> aplicarFiltroFecha());
+            buscador.add(btnFiltrar, BorderLayout.EAST);
+            JButton btnLimpiar = new JButton("Todas");
+            btnLimpiar.addActionListener(e -> {
+                mostrarCompras(comprasCliente);
+            });
+            buscador.add(btnLimpiar, BorderLayout.SOUTH);
+
+            panel.add(buscador, BorderLayout.NORTH);
+            panel.add(new JScrollPane(tablaCompras), BorderLayout.CENTER);
+            return panel;
+    }
+
+    private JPanel crearPanelDetalleCompra() {
+            JPanel panel = new JPanel(new GridBagLayout());
+            panel.setBorder(BorderFactory.createTitledBorder("Detalles de la compra"));
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.weightx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(6, 8, 6, 8);
+
+            gbc.gridy = 0;
+            panel.add(new JLabel("Monto final"), gbc);
+            gbc.gridy = 1;
+            panel.add(txtMontoCompra, gbc);
+            gbc.gridy = 2;
+            panel.add(new JLabel("Fecha y hora"), gbc);
+            gbc.gridy = 3;
+            panel.add(txtFechaCompra, gbc);
+            gbc.gridy = 4;
+            panel.add(new JLabel("Beneficios aplicados"), gbc);
+            gbc.gridy = 5;
+            gbc.weighty = 1;
+            gbc.fill = GridBagConstraints.BOTH;
+            panelBeneficios.setLayout(new BoxLayout(panelBeneficios, BoxLayout.Y_AXIS));
+            panelBeneficios.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+            panel.add(new JScrollPane(panelBeneficios), gbc);
+            limpiarDetalleCompra();
+            return panel;
+    }
+
+    private void aplicarFiltroFecha() {
+            Date fechaSeleccionada = (Date) selectorFecha.getValue();
+            LocalDate dia = fechaSeleccionada.toInstant()
+                    .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            List<Compra> comprasFiltradas = comprasCliente.stream()
+                    .filter(compra -> compra.getFechaHora().toLocalDate().equals(dia))
+                    .toList();
+            mostrarCompras(comprasFiltradas);
+    }
+
+    private void mostrarCompras(List<Compra> compras) {
+            modeloHistorial.setRowCount(0);
+            tablaCompras.clearSelection();
+            limpiarDetalleCompra();
+            for (Compra compra : compras) {
+                modeloHistorial.addRow(new Object[] {
+                        compra.getIdCompra(),
+                        compra.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+                        String.format("$ %.2f", compra.getMonto()),
+                        compra
+                });
+            }
+    }
+
+    private void seleccionarCompra() {
+            int fila = tablaCompras.getSelectedRow();
+            if (fila < 0) {
+                return;
+            }
+            compraSeleccionada = (Compra) modeloHistorial.getValueAt(
+                    tablaCompras.convertRowIndexToModel(fila), 3);
+            mostrarDetalle(compraSeleccionada);
     }
 
     private JPanel crearPanelFicha() {
@@ -145,7 +235,28 @@ public class PantallaCuentaCliente extends JPanel {
     }
 
     private void mostrarDetalle(Compra compra) {
-        lblDetalle.setText(String.format("Compra #%d | Monto final: $ %.2f | Fecha: %s | Beneficios aplicados: %d",
-                compra.getIdCompra(), compra.getMonto(), compra.getFechaHora(), compra.getBeneficiosAplicados().size()));
+        txtMontoCompra.setText(String.format("$ %.2f", compra.getMonto()));
+        txtFechaCompra.setText(compra.getFechaHora()
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        panelBeneficios.removeAll();
+        if (compra.getBeneficiosAplicados().isEmpty()) {
+            panelBeneficios.add(new JLabel("No se aplicaron beneficios."));
+        } else {
+            compra.getBeneficiosAplicados().forEach(aplicado -> {
+                JLabel beneficio = new JLabel("• " + aplicado.getBeneficio().getNombre());
+                beneficio.setAlignmentX(Component.LEFT_ALIGNMENT);
+                panelBeneficios.add(beneficio);
+                panelBeneficios.add(Box.createVerticalStrut(6));
+            });
+        }
+        panelBeneficios.revalidate();
+        panelBeneficios.repaint();
+    }
+
+    private void limpiarDetalleCompra() {
+        txtMontoCompra.setText("");
+        txtFechaCompra.setText("");
+        panelBeneficios.removeAll();
+        panelBeneficios.add(new JLabel("Seleccione una compra."));
     }
 }
