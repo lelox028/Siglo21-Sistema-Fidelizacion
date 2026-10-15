@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ClienteDAO {
 
@@ -56,6 +58,21 @@ public class ClienteDAO {
             }
         } catch (SQLException e) {
             throw new ErrorAccesoDatosException("No se pudo buscar el cliente.", e);
+        }
+    }
+
+    public List<Cliente> listarTodos() throws ErrorAccesoDatosException {
+        String sql = "SELECT dni, nombre_completo, telefono, email, fecha_cumpleanos FROM Cliente ORDER BY nombre_completo";
+        List<Cliente> clientes = new ArrayList<>();
+        try (Connection conn = obtenerConexion();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                clientes.add(mapearCliente(rs));
+            }
+            return clientes;
+        } catch (SQLException e) {
+            throw new ErrorAccesoDatosException("No se pudo listar los clientes.", e);
         }
     }
 

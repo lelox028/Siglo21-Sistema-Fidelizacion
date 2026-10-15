@@ -4,6 +4,7 @@ import com.example.sistemafidelizacion.DAO.ClienteDAO;
 import com.example.sistemafidelizacion.DAO.ErrorAccesoDatosException;
 import com.example.sistemafidelizacion.Modelo.Cliente;
 import java.time.LocalDate;
+import java.util.List;
 
 // Capa de Control o logica, en este caso actua como un hibrido entre service y controller en Springboot.
 public class GestorClientes {
@@ -55,6 +56,14 @@ public class GestorClientes {
             return clienteDAO.buscarPorDni(dni);
         } catch (ErrorAccesoDatosException e) {
             throw new ErrorOperacionException("No se pudo encontrar el cliente.", e);
+        }
+    }
+
+    public List<Cliente> listarClientes() throws ErrorOperacionException {
+        try {
+            return clienteDAO.listarTodos();
+        } catch (ErrorAccesoDatosException e) {
+            throw new ErrorOperacionException("No se pudo listar los clientes.", e);
         }
     }
 
