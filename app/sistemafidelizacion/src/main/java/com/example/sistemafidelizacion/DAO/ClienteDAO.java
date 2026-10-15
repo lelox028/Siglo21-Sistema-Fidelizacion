@@ -61,6 +61,7 @@ public class ClienteDAO {
         }
     }
 
+    // ya sabemos que listar todos juntos sin paginacion es un problema de rendimiento, pero para esta entrega alcanza.
     public List<Cliente> listarTodos() throws ErrorAccesoDatosException {
         String sql = "SELECT dni, nombre_completo, telefono, email, fecha_cumpleanos FROM Cliente ORDER BY nombre_completo";
         List<Cliente> clientes = new ArrayList<>();
