@@ -53,3 +53,9 @@ DB_PASS=su_contraseña
 `DB_HOST` debe ser la URL JDBC completa.
 `tu_usuario` y `tu_contraseña` debe ser reemplazado por las credenciales de MySQL. 
 La base de datos debe existir; puedes crearla y preparar sus tablas ejecutando `db/script-creacion.sql` desde la raíz del repositorio.
+
+## Deuda tecnica
+En este momento, en pos de llegar al plazo de la 3er entrega se omitieron concientemente las siguientes funcionalidades:
+- Eliminar registros de la DB (tales como clientes, compras o beneficios)
+- UI especifica para alta de clientes; hoy en dia el alta se realiza modificando un cliente (vacio o existente) e ingresando un dni nuevo. Tambien es necesario eventualmente que la interfaz explique que no se puede permitir que el DNI de un cliente sea actualizado.
+- Ahora mismo el beneficio de cumpleanios se compara con el anio actual, no con la fecha de compra.
