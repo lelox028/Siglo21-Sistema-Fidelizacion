@@ -3,6 +3,10 @@ package com.example.sistemafidelizacion.Vista;
 import javax.swing.*;
 
 import com.example.sistemafidelizacion.Vista.Cliente.FormularioCliente;
+import com.example.sistemafidelizacion.Vista.Cliente.PantallaCuentaCliente;
+import com.example.sistemafidelizacion.Vista.Beneficios.FormularioBeneficio;
+import com.example.sistemafidelizacion.Vista.Compra.FormularioCompra;
+import com.example.sistemafidelizacion.Vista.Reportes.PantallaReportes;
 
 import java.awt.*;
 
@@ -27,16 +31,18 @@ public class PantallaPrincipal extends JFrame {
 
         // 3. Crear las instancias de los paneles secundarios (deben extender de JPanel)
         FormularioCliente panelClientes = new FormularioCliente(this);
-        // FormularioBeneficio panelBeneficios = new FormularioBeneficio(this);
-        // FormularioCompra panelCompra = new FormularioCompra(this);
-        // PantallaReportes panelReportes = new PantallaReportes(this);
+        FormularioBeneficio panelBeneficios = new FormularioBeneficio(this);
+        FormularioCompra panelCompra = new FormularioCompra(this);
+        PantallaReportes panelReportes = new PantallaReportes(this);
+        PantallaCuentaCliente panelCuenta = new PantallaCuentaCliente(this);
 
         // 4. Agregar los paneles al contenedor asignándoles un nombre clave (String)
         contenedorPrincipal.add(panelMenu, "MENU");
         contenedorPrincipal.add(panelClientes, "CLIENTES");
-        // contenedorPrincipal.add(panelBeneficios, "BENEFICIOS");
-        // contenedorPrincipal.add(panelCompra, "COMPRAS");
-        // contenedorPrincipal.add(panelReportes, "REPORTES");
+        contenedorPrincipal.add(panelBeneficios, "BENEFICIOS");
+        contenedorPrincipal.add(panelCompra, "COMPRAS");
+        contenedorPrincipal.add(panelReportes, "REPORTES");
+        contenedorPrincipal.add(panelCuenta, "CUENTA");
 
         // 5. Agregar el contenedor al JFrame
         add(contenedorPrincipal);
@@ -95,5 +101,15 @@ public class PantallaPrincipal extends JFrame {
      */
     public void mostrarPantalla(String nombrePantalla) {
         cardLayout.show(contenedorPrincipal, nombrePantalla);
+    }
+
+    public void mostrarCuentaCliente(int dni) {
+        for (Component component : contenedorPrincipal.getComponents()) {
+            if (component instanceof PantallaCuentaCliente cuenta) {
+                cuenta.cargarCliente(dni);
+                break;
+            }
+        }
+        mostrarPantalla("CUENTA");
     }
 }
