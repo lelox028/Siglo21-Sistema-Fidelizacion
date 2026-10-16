@@ -40,11 +40,31 @@ public class GestorBeneficios {
         }
     }
 
+    public boolean modificarBeneficio(Beneficio beneficio) throws ErrorOperacionException {
+        if (beneficio == null || beneficio.getNombre() == null || beneficio.getNombre().isBlank()
+                || beneficio.getDescripcion() == null || beneficio.getDescripcion().isBlank()) {
+            throw new ValidacionException("El nombre y la descripción del beneficio son obligatorios.");
+        }
+        try {
+            return beneficioDAO.actualizar(beneficio);
+        } catch (ErrorAccesoDatosException e) {
+            throw new ErrorOperacionException("No se pudo modificar el beneficio.", e);
+        }
+    }
+
     public List<Beneficio> consultarBeneficiosActivos() throws ErrorOperacionException {
         try {
             return beneficioDAO.listarActivos();
         } catch (ErrorAccesoDatosException e) {
             throw new ErrorOperacionException("No se pudieron consultar los beneficios activos.", e);
+        }
+    }
+
+    public List<Beneficio> consultarTodosLosBeneficios() throws ErrorOperacionException {
+        try {
+            return beneficioDAO.listarTodos();
+        } catch (ErrorAccesoDatosException e) {
+            throw new ErrorOperacionException("No se pudieron consultar todos los beneficios.", e);
         }
     }
 }
