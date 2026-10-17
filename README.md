@@ -59,3 +59,4 @@ En este momento, en pos de llegar al plazo de la 3er entrega se omitieron concie
 - Eliminar registros de la DB (tales como clientes, compras o beneficios)
 - UI especifica para alta de clientes; hoy en dia el alta se realiza modificando un cliente (vacio o existente) e ingresando un dni nuevo. Tambien es necesario eventualmente que la interfaz explique que no se puede permitir que el DNI de un cliente sea actualizado.
 - Ahora mismo el beneficio de cumpleanios se compara con el anio actual, no con la fecha de compra.
+- la funcionalidad de reportes fue **severamente** simplificada durante esta entrega por motivos de tiempo.

@@ -90,6 +90,12 @@ public class CompraDAO {
             throws ErrorAccesoDatosException {
         // Query GIGANTE para obtener todas las compras, los clientes que las realizaron
         // y sus beneficios aplicados.
+        return obtenerParaReporte(desde, hasta, null, null, false);
+    }
+
+    public List<Compra> obtenerParaReporte(LocalDateTime desde, LocalDateTime hasta,
+            Double montoMinimo, Double montoMaximo, boolean soloBeneficiosActivos)
+            throws ErrorAccesoDatosException {
         String sql = "SELECT co.id_compra, co.fecha_hora, co.monto, "
                 + "c.dni, c.nombre_completo, c.telefono, c.email, c.fecha_cumpleanos, "
                 + "ba.id_beneficio_aplicado, ba.fecha_aplicacion, "
@@ -105,8 +111,14 @@ public class CompraDAO {
                 // filtro de fecha correspondiente, si no son null, se filtra por el rango de
                 // fecha solicitado.
                 + "WHERE (? IS NULL OR co.fecha_hora >= ?) "
-                + "AND (? IS NULL OR co.fecha_hora <= ?) ORDER BY co.fecha_hora";
-                // el resto de la logica es similar a la que usamos en el resto de los metodos.
+                + "AND (? IS NULL OR co.fecha_hora <= ?) "
+                + "AND (? IS NULL OR co.monto >= ?) "
+                + "AND (? IS NULL OR co.monto <= ?) "
+                + "AND (? = FALSE OR EXISTS ("
+                + "SELECT 1 FROM BeneficioAplicado ba_act "
+                + "INNER JOIN Beneficio b_act ON b_act.id_beneficio = ba_act.id_beneficio "
+                + "WHERE ba_act.id_compra = co.id_compra AND b_act.activo = TRUE)) "
+                + "ORDER BY co.fecha_hora";
         Map<Integer, Compra> compras = new LinkedHashMap<>();
         try (Connection conn = obtenerConexion();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -114,6 +126,11 @@ public class CompraDAO {
             stmt.setObject(2, desde);
             stmt.setObject(3, hasta);
             stmt.setObject(4, hasta);
+            stmt.setObject(5, montoMinimo);
+            stmt.setObject(6, montoMinimo);
+            stmt.setObject(7, montoMaximo);
+            stmt.setObject(8, montoMaximo);
+            stmt.setBoolean(9, soloBeneficiosActivos);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     mapearCompraConBeneficio(rs, compras);
