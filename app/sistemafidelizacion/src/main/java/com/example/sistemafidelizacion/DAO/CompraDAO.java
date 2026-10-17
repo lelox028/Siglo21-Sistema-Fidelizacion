@@ -112,8 +112,11 @@ public class CompraDAO {
                 // fecha solicitado.
                 + "WHERE (? IS NULL OR co.fecha_hora >= ?) "
                 + "AND (? IS NULL OR co.fecha_hora <= ?) "
+                // lo mismo para el monto minimo y maximo, si son null no se filtra, si no lo
+                // son, se filtra por el rango de monto solicitado.
                 + "AND (? IS NULL OR co.monto >= ?) "
                 + "AND (? IS NULL OR co.monto <= ?) "
+                // Filtro para que si soloBeneficiosActivos es true, se muestren solo las compras que tengan al menos un beneficio activo aplicado, si es false, se muestran todas las compras.
                 + "AND (? = FALSE OR EXISTS ("
                 + "SELECT 1 FROM BeneficioAplicado ba_act "
                 + "INNER JOIN Beneficio b_act ON b_act.id_beneficio = ba_act.id_beneficio "
