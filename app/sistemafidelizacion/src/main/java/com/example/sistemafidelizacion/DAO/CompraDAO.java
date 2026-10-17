@@ -86,6 +86,45 @@ public class CompraDAO {
         }
     }
 
+    public List<Compra> obtenerParaReporte(LocalDateTime desde, LocalDateTime hasta)
+            throws ErrorAccesoDatosException {
+        // Query GIGANTE para obtener todas las compras, los clientes que las realizaron
+        // y sus beneficios aplicados.
+        String sql = "SELECT co.id_compra, co.fecha_hora, co.monto, "
+                + "c.dni, c.nombre_completo, c.telefono, c.email, c.fecha_cumpleanos, "
+                + "ba.id_beneficio_aplicado, ba.fecha_aplicacion, "
+                + "b.id_beneficio, b.nombre AS beneficio_nombre, b.descripcion, b.activo "
+                // Inner Join con cliente para obtener los datos del cliente que realizó la
+                // compra (todas las compras tienen exactamente un cliente asociado)
+                + "FROM Compra co INNER JOIN Cliente c ON c.dni = co.dni_cliente "
+                // Left join con beneficio aplicado y beneficio para obtener los beneficios
+                // aplicados a cada compra (si los hay)
+                + "LEFT JOIN BeneficioAplicado ba ON ba.id_compra = co.id_compra "
+                + "LEFT JOIN Beneficio b ON b.id_beneficio = ba.id_beneficio "
+                // Filtro magico que permite que si desde o hasta son null, no se aplique el
+                // filtro de fecha correspondiente, si no son null, se filtra por el rango de
+                // fecha solicitado.
+                + "WHERE (? IS NULL OR co.fecha_hora >= ?) "
+                + "AND (? IS NULL OR co.fecha_hora <= ?) ORDER BY co.fecha_hora";
+                // el resto de la logica es similar a la que usamos en el resto de los metodos.
+        Map<Integer, Compra> compras = new LinkedHashMap<>();
+        try (Connection conn = obtenerConexion();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, desde);
+            stmt.setObject(2, desde);
+            stmt.setObject(3, hasta);
+            stmt.setObject(4, hasta);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    mapearCompraConBeneficio(rs, compras);
+                }
+            }
+            return new ArrayList<>(compras.values());
+        } catch (SQLException e) {
+            throw new ErrorAccesoDatosException("No se pudo obtener la información para el reporte.", e);
+        }
+    }
+
     private void mapearCompraConBeneficio(ResultSet rs, Map<Integer, Compra> compras) throws SQLException {
         Cliente cliente = new Cliente(
                 rs.getInt("dni"),
