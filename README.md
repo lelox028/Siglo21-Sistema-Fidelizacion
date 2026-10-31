@@ -60,3 +60,4 @@ En este momento, en pos de llegar al plazo de la 3er entrega se omitieron concie
 - UI especifica para alta de clientes; hoy en dia el alta se realiza modificando un cliente (vacio o existente) e ingresando un dni nuevo. Tambien es necesario eventualmente que la interfaz explique que no se puede permitir que el DNI de un cliente sea actualizado.
 - Ahora mismo el beneficio de cumpleanios se compara con el anio actual, no con la fecha de compra.
 - Al registrar una compra nueva no hay suficiente feedback. La compra se registra satisfactoriamente pero deberia agregar una alerta y los campos deberian borrarse.
+- IMPORTANTE: la seccion de reportes se basa EXCLUSIVAMENTE en compras, es decir, informacion sobre aquellos beneficios o clientes sin compras asociadas no sera tenida en cuenta.

@@ -147,29 +147,29 @@ public class GestorReportes {
             });
         }
         // creamos un mapa con las categorias y la cantidad de beneficios que pertenecen a cada una.
-        Map<String, Integer> grupos = new LinkedHashMap<>();
+        Map<String, Integer> categorias = new LinkedHashMap<>();
         // recorremos el mapa que contiene la cantidad de usos por beneficio y lo agrupamos segun el criterio seleccionado.
         usosPorBeneficio.forEach((nombre, usos) -> {
             String clave;
             if ("Activos vs Inactivos".equals(agruparPor)) {
                 clave = estadoPorBeneficio.get(nombre) ? "Activos" : "Inactivos";
-                grupos.put(clave, grupos.getOrDefault(clave, 0) + 1);
+                categorias.put(clave, categorias.getOrDefault(clave, 0) + 1);
             } else {
                 if (usos <= 10) {
-                    clave = "10 o menos";
+                    clave = "Usados 10 o menos veces";
                 } else if (usos < 100) {
-                    clave = "Entre 10 y 100";
+                    clave = "Usados entre 10 y 100 veces";
                 } else {
-                    clave = "100 o más";
+                    clave = "Usados 100 o más veces";
                 }
-                grupos.put(clave, grupos.getOrDefault(clave, 0) + usos);
+                categorias.put(clave, categorias.getOrDefault(clave, 0) + 1);
             }
         });
         
         List<Object[]> filas = new ArrayList<>();
-        grupos.forEach((grupo, usos) -> filas.add(new Object[] { grupo, usos }));
+        categorias.forEach((grupo, cantidad) -> filas.add(new Object[] { grupo, cantidad }));
         
-        return new Reporte(new String[] { "Grupo", "Cantidad de beneficios" }, filas, compras);
+        return new Reporte(new String[] { "Categoría", "Cantidad de beneficios" }, filas, compras);
         
     }
 
@@ -197,24 +197,24 @@ public class GestorReportes {
             return "Noche";
         }
         // si mostramos clientes...
-        if ("Clientes".equals(mostrar)) {
+        // if ("Clientes".equals(mostrar)) {
             return compra.getBeneficiosAplicados().isEmpty()
                     ? "No usaron beneficios"
                     : "Usaron beneficios";
-        }
-        // si mostramos beneficios y agrupamos por estado de los beneficios:
-        if ("Activos vs Inactivos".equals(agruparPor)) {
-            return compra.getBeneficiosAplicados().stream().anyMatch(b -> !b.getBeneficio().isActivo())
-                    ? "Inactivos"
-                    : "Activos";
-        }
-        // si mostramos beneficios y agrupamos por cantidad de usos:
-        int cantidadUsos = compra.getBeneficiosAplicados().size();
-        if (cantidadUsos <= 10)
-            return "10 o menos";
-        if (cantidadUsos < 100)
-            return "Entre 10 y 100";
-        return "100 o más";
+        // }
+        // // si mostramos beneficios y agrupamos por estado de los beneficios:
+        // if ("Activos vs Inactivos".equals(agruparPor)) {
+        //     return compra.getBeneficiosAplicados().stream().anyMatch(b -> !b.getBeneficio().isActivo())
+        //             ? "Inactivos"
+        //             : "Activos";
+        // }
+        // // si mostramos beneficios y agrupamos por cantidad de usos:
+        // int cantidadUsos = compra.getBeneficiosAplicados().size();
+        // if (cantidadUsos <= 10)
+        //     return "10 o menos";
+        // if (cantidadUsos < 100)
+        //     return "Entre 10 y 100";
+        // return "100 o más";
     }
 
     private static class Resumen {
