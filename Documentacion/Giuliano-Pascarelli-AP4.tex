@@ -1,0 +1,170 @@
+\documentclass{article}
+% !TEX program = xelatex
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[spanish]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{multicol}
+% Paquetes para índice automático
+\usepackage{tocloft}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{xurl} % Permite romper URLs largas sin overfull hbox
+% Arial font
+\usepackage{fontspec}
+% \setmainfont{Arial}
+
+% Quitar sangría
+\setlength{\parindent}{0pt}
+
+\title{Entrega \#4}
+\author{Giuliano Pascarelli}
+
+\begin{document}
+
+\maketitle
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{universidad-siglo-21-logo.pdf}
+    \label{fig:enter-label} 
+\end{figure}
+\vspace*{\fill}
+\noindent
+M4 - Giuliano Pascarelli \\
+Licenciatura en Informática. \\
+Materia: SEMINARIO DE PRÁCTICA DE INFORMÁTICA (INF275-11987)\\
+Período académico: 2026, subperíodo 2B\\
+Profesor: MARCOS DARIO ARANDA \\ \\ \\ \\ \\ \\ \\ \\
+
+\newpage
+\section{Índice}
+
+\renewcommand{\contentsname}{Tabla de contenidos}
+\tableofcontents
+
+\newpage
+\section{Consigna}
+%\renewcommand{\thesubsection}{\arabic{subsection}} % Mostrar solo el número de la subsección
+\setcounter{subsection}{0} % Reiniciar el contador de subsecciones
+
+\subsection{Enunciado}
+Considera que te encuentras trabajando en la organización cuyo problema definiste resolver con un proyecto informático, y te solicitan liderar el equipo de desarrollo que va a llevar adelante el mismo.
+
+El proyecto informático que definas debe ser distinto al considerado en la lectura y el entregable final debe cumplir con los siguientes objetivos:
+\begin{itemize}
+    \item Realizar el análisis del modelo de negocios para definir y justificar el proyecto.
+    \item Aplicar el proceso unificado de desarrollo (PUD) para garantizar la calidad, escalabilidad y eficiencia en el ciclo de desarrollo.
+    \item Utilizar una base de datos MySQL para la persistencia de los datos.
+    \item Emplear Java como lenguaje de programación para el desarrollo del sistema.
+\end{itemize}
+
+A los fines del trabajo, para la implementación de la base de datos y el desarrollo con Java, puedes presentar un prototipo, que es “es la creación de un modelo operacional que incluya solo algunas características del sistema final” (Kendall \& Kendall, 2011).
+
+\vspace{3pt}
+
+El concepto de operacional es clave, ya que no se trata de un simple modelo, sino que permite desarrollar módulos que se van integrando en la versión final del sistema.
+
+\vspace{3pt}
+
+Esta cuarta actividad te permitirá avanzar con el proyecto integrador que debe utilizar un patrón de diseño coherente con las definiciones establecidas en la arquitectura definida.
+
+\vspace{3pt}
+
+Para el desarrollo del prototipo en Java, deberás crear un paquete cuyas clases permitan realizar la persistencia en una base de datos MySQL. Esta actividad incluye establecer conexiones, realizar consultas, actualizar registros y presentar resultados en la interfaz. En todos los casos que se requiera, recuerda aplicar correctamente el manejo de excepciones.
+
+\vspace{3pt}
+
+El desarrollo debe incluir la aplicación de clases abstractas o interfaces. También debe contemplar la utilización de arreglos y emplear la clase ArrayList, ambas estructuras de forma complementaria.
+
+\vspace{3pt}
+
+Según las características del proyecto, puedes utilizar archivos. Aunque esta actividad es opcional, te recomiendo practicar su aplicación, previo a presentarte en el EFIP I.
+
+\vspace{3pt}
+
+\subsection{Consignas}
+
+Los entregables a presentar son los siguientes:
+\begin{enumerate}
+    \item Presentación del desarrollo en Java.
+    \item Entrega del proyecto integrador, completo.
+    \item Presentación del proyecto en un video con una duración de aproximadamente 3 minutos.
+\end{enumerate}
+
+El proyecto o prototipo desarrollado debe contemplar necesariamente las siguientes características:
+
+\begin{enumerate}
+    \item Corrección de las observaciones realizadas en la entrega de las actividades anteriores.
+    \item Selección del patrón de diseño y justificación.
+    \item Persistencia y consulta de datos en una base de datos MySQL. Esta actividad incluye establecer conexiones, realizar consultas, actualizar registros y presentar resultados en la interfaz.
+    \item Correcta aplicación de excepciones para la interacción con la base de datos MySQL.
+    \item Inclusión pertinente de clases abstractas o interfaces.
+    \item Utilización complementaria de arreglos y de la clase ArrayList. 
+\end{enumerate}
+
+
+En esta instancia, te sugiero revisar la rúbrica para asegurar el cumplimiento del criterio expuesto que considera la evaluación de tu participación activa en actividades propuestas: foros, encuentros sincrónicos, aportes en espacios comunes y comunicación.
+
+\vspace{3pt}
+
+Te recomiendo, además, apoyarte en las lecturas y bibliografía propuesta en las materias: Programación Orientada a Objetos, Taller de Algoritmos y Estructuras de Datos I.
+
+\newpage
+
+
+\section{Desarrollo}
+%\renewcommand{\thesubsection}{\arabic{subsection}} % Mostrar solo el número de la subsección
+% \setcounter{subsection}{0} % Reiniciar el contador de subsecciones
+\subsection{Introducción} 
+\textbf{Enlace al proyecto:} \url{https://github.com/lelox028/Siglo21-Sistema-Fidelizacion}
+
+El repositorio público contiene el código fuente Java del sistema y los scripts SQL utilizados para crear, poblar y consultar la base de datos. El video de demostración se encuentra en el siguiente enlace: \url{https://www.youtube.com/watch?v=example}.
+
+El presente informe documenta las decisiones técnicas adoptadas para completar el prototipo del Sistema de Fidelización de Clientes. La implementación conserva el alcance definido en las entregas anteriores: registrar clientes, administrar beneficios, asociar beneficios con compras y consultar información histórica mediante una aplicación de escritorio desarrollada en Java Swing, con persistencia en MySQL.
+
+\subsection{Entregas anteriores (corregidas)}
+Las entregas correspondientes a AP1, AP2 y AP3 fueron aprobadas sin correcciones. Por este motivo, no se realizan modificaciones sobre los contenidos ya evaluados: se mantiene la propuesta del sistema de fidelización, el análisis y los requerimientos definidos en AP1, la arquitectura, el modelo de datos y las decisiones de diseño de AP2, y la implementación orientada a objetos documentada en AP3.
+
+Los informes anteriores serán adjuntados nuevamente junto con esta entrega para facilitar su revisión y permitir la consulta de los fundamentos, modelos y decisiones que sirven de base para el desarrollo presentado en AP4.
+
+\subsection{Explicación y Justificación del Patrón de Diseño}
+El sistema utiliza el patrón arquitectónico MVC (\textit{Model--View--Controller}), adaptado a la organización en paquetes del proyecto. Esta elección permite separar las responsabilidades y evitar que la interfaz gráfica, la lógica de negocio y el acceso a los datos queden concentrados en las mismas clases.
+
+\begin{itemize}
+    \item \textbf{Modelo:} está representado por las clases del paquete \texttt{Modelo}, como \texttt{Cliente}, \texttt{Compra}, \texttt{Beneficio} y \texttt{BeneficioAplicado}. Estas clases encapsulan los datos y representan las entidades principales del dominio.
+    \item \textbf{Vista:} está formada por las clases del paquete \texttt{Vista}, construidas con Java Swing, como \texttt{PantallaPrincipal}, \texttt{FormularioCliente}, \texttt{FormularioCompra}, \texttt{FormularioBeneficio} y \texttt{PantallaReportes}. Su responsabilidad es presentar la información, recibir las acciones del usuario y mostrar los resultados.
+    \item \textbf{Controlador:} corresponde principalmente a las clases \texttt{GestorClientes}, \texttt{GestorCompras}, \texttt{GestorBeneficios}, \texttt{GestorAplicacionBeneficios} y \texttt{GestorReportes}, ubicadas en el paquete \texttt{Control}. Los Gestores coordinan las operaciones solicitadas por la Vista, validan reglas de negocio y delegan la persistencia a los DAOs.
+\end{itemize}
+
+El paquete \texttt{DAO} complementa esta separación al encapsular el acceso a MySQL. Aunque no constituye una de las tres partes nominales de MVC, permite que el Controlador no dependa directamente de sentencias SQL y mantiene aislados los detalles de infraestructura. De este modo, la Vista no necesita conocer cómo se almacenan los datos, el Modelo no contiene consultas SQL y los Gestores concentran la coordinación de los casos de uso.
+
+\subsection{Persistencia y Base de Datos (JDBC)}
+La aplicación se conecta con una base de datos relacional MySQL utilizando JDBC (\textit{Java Database Connectivity}), sin frameworks de persistencia. JDBC proporciona las clases y métodos estándar para abrir una conexión, preparar sentencias SQL, enviar consultas o actualizaciones y recuperar los resultados devueltos por la base de datos.
+
+La clase \texttt{ConexionDB}, ubicada en el paquete \texttt{DAO}, centraliza la creación y el cierre de la conexión. Obtiene la configuración desde variables de entorno, registra el controlador \texttt{com.mysql.cj.jdbc.Driver} y utiliza \texttt{DriverManager} para conectarse mediante la URL JDBC. La clase mantiene una única conexión activa y la vuelve a crear si no existe o se encuentra cerrada.
+
+Las operaciones de persistencia se organizan mediante el patrón DAO (\textit{Data Access Object}). Clases como \texttt{ClienteDAO}, \texttt{CompraDAO}, \texttt{BeneficioDAO} y \texttt{BeneficioAplicadoDAO} concentran las operaciones de inserción, búsqueda, actualización y listado de sus respectivas entidades. Para ejecutar SQL se utilizan \texttt{PreparedStatement}, parámetros y bloques \textit{try-with-resources}, lo que permite separar el acceso a datos de las entidades y de la interfaz, además de asegurar el cierre de los recursos utilizados.
+
+Cuando una operación JDBC produce un error, el DAO lo encapsula en \texttt{ErrorAccesoDatosException}. Luego, los Gestores pueden traducirlo a \texttt{ErrorOperacionException} para que la Vista reciba un error propio de la operación solicitada, sin depender de los detalles técnicos de JDBC. La base relacional mantiene además las relaciones entre clientes, compras y beneficios, junto con la integridad referencial y las propiedades ACID necesarias para las operaciones del sistema.
+
+\subsection{Justificación de Decisiones Técnicas}
+\subsubsection{Excepciones}
+Las excepciones se utilizan para informar errores de acceso a datos y datos inválidos sin confundirlos con un resultado exitoso. En la capa DAO, las excepciones \texttt{SQLException} se capturan y se encapsulan en \texttt{ErrorAccesoDatosException}. En la capa de Control, los Gestores validan los datos de entrada y utilizan \texttt{ValidacionException} para casos como un DNI inválido, datos obligatorios ausentes o un cliente inexistente. De esta forma, cada capa conserva su responsabilidad: el DAO comunica problemas de infraestructura y el Gestor comunica problemas de negocio u operación.
+
+\subsubsection{Uso de \texttt{ArrayList}}
+La clase \texttt{ArrayList} se utiliza cuando la cantidad de elementos es variable y se necesita conservar una colección ordenada para procesarla o presentarla. Por ejemplo, \texttt{ClienteDAO.listarTodos} agrega a un \texttt{ArrayList} los clientes obtenidos del \texttt{ResultSet}; de forma similar, los gestores y las vistas trabajan con listas de compras, beneficios y filas de reportes. Esta estructura permite recorrer los resultados con ciclos, agregar elementos durante la consulta y entregar colecciones a la interfaz sin fijar de antemano una cantidad máxima de registros.
+
+\subsubsection{Manejo de Archivos}
+No se utilizó persistencia en archivos de texto porque la naturaleza del sistema es transaccional y puede requerir operaciones concurrentes sobre clientes, compras y beneficios. Para este escenario se necesita un motor de base de datos relacional como MySQL, capaz de mantener la integridad referencial y las propiedades ACID (atomicidad, consistencia, aislamiento y durabilidad). Además, el alcance de este MVP no incluye requerimientos de exportación o importación externa; por lo tanto, incorporar archivos de texto habría duplicado mecanismos de persistencia sin aportar una funcionalidad necesaria para la versión presentada.
+
+\end{document}

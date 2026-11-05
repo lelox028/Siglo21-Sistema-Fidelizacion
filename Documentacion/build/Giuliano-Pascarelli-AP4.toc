@@ -1,0 +1,14 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Índice}{2}{section.1}%
+\contentsline {section}{\numberline {2}Consigna}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Enunciado}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Consignas}{3}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Desarrollo}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Introducción}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Entregas anteriores (corregidas)}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Explicación y Justificación del Patrón de Diseño}{4}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Persistencia y Base de Datos (JDBC)}{4}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Justificación de Decisiones Técnicas}{5}{subsection.3.5}%
+\contentsline {subsubsection}{\numberline {3.5.1}Excepciones}{5}{subsubsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.2}Uso de \texttt {ArrayList}}{5}{subsubsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.5.3}Manejo de Archivos}{5}{subsubsection.3.5.3}%
