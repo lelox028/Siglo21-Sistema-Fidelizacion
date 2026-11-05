@@ -41,7 +41,7 @@ public class PantallaPrincipal extends JFrame {
         contenedorPrincipal.add(panelClientes, "CLIENTES");
         contenedorPrincipal.add(panelBeneficios, "BENEFICIOS");
         contenedorPrincipal.add(panelCompra, "COMPRAS");
-        contenedorPrincipal.add(panelReportes, "REPORTES DE COMPRAS");
+        contenedorPrincipal.add(panelReportes, "REPORTES");
         contenedorPrincipal.add(panelCuenta, "CUENTA");
 
         // 5. Agregar el contenedor al JFrame
