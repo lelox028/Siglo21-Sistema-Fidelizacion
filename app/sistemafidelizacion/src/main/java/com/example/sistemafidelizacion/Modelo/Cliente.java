@@ -75,8 +75,8 @@ public class Cliente {
     }
 
     // metodos especificos
-    public boolean utilizoBeneficioCumpleanos() {
-        // logica para determinar si el cliente utilizo el beneficio de cumpleaños
-        return false;
-    }
+    // public boolean utilizoBeneficioCumpleanos() {
+    //     // logica para determinar si el cliente utilizo el beneficio de cumpleaños
+    //     return false;
+    // }
 }
